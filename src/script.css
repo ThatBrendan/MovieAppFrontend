@@ -1,0 +1,40 @@
+body {
+  padding: 2rem;
+  background: whitesmoke;
+}
+
+.movieMain {
+  background: rgb(117, 127, 129);
+  padding: 2rem 1.5rem;
+}
+
+.movieTable {
+  border: 1px whitesmoke solid;
+  border-radius: 0.5rem;
+  width: 90%;
+  text-align: center;
+  padding: 1.5rem;
+  margin: 1.5rem 0 0 2.5rem;
+}
+.searchBar {
+  align-items: center;
+  justify-content: space-between;
+}
+.searchBar input {
+  width: 30%;
+  padding: 8px 10px;
+  box-sizing: border-box;
+  margin: 8px 20px;
+}
+
+.searchBar button {
+  padding: 0.7rem;
+  border-radius: 0.3rem;
+  border: black;
+}
+
+.banner {
+  align-items: center;
+  text-align: center;
+  color: whitesmoke;
+}
