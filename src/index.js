@@ -5,70 +5,236 @@ import axios from "axios";
 
 import "./script.css";
 
-class MovieGenreRow extends React.Component {
+class DeleteReview extends React.Component {
+  state = {
+    user_review_id: "",
+  };
+  handleChange = (e) => {
+    this.setState({
+      user_review_id: e.target.value,
+    });
+  };
+  handleSubmit = (e) => {
+    e.preventDefault();
+
+    axios
+      .delete(
+        `http://44.203.117.199:8080/Home/review/delete/${this.state.user_review_id}`
+      )
+      .then((response) => {
+        console.log(response);
+        console.log(response.data);
+        window.location.reload(false);
+      });
+  };
+
   render() {
-    const genre = this.props.genre;
-    return <tr>{/* <th colSpan="4">{}</th> */}</tr>;
+    return (
+      <div>
+        <form onSubmit={this.handleSubmit}>
+          <input placeholder="Review ID" onChange={this.handleChange} />
+          <button type="submit">Delete</button>
+        </form>
+      </div>
+    );
   }
 }
 
-class SpecificMovieRow extends React.Component {
+class PutReview extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      user_review_id: "",
+      user_review: "",
+      // updatedAt: null,
+    };
+  }
+
+  onUserReviewIDChange = (e) => {
+    this.setState({
+      user_review_id: e.target.value,
+    });
+  };
+
+  onUserReviewChange = (e) => {
+    this.setState({
+      user_review: e.target.value,
+    });
+  };
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+
+    axios
+      .put(
+        `http://44.203.117.199:8080/Home/review/update/${this.state.user_review_id}?user_review=${this.state.user_review}`
+      )
+      .then((response) => console.log(response))
+      .catch((err) => console.log(err));
+    window.location.reload(false);
+  };
+
   render() {
-    return;
+    // const { errorMessage } = this.state;
+    return (
+      <div>
+        <form onSubmit={this.handleSubmit}>
+          <input
+            placeholder="Review ID"
+            value={this.state.user_review_id}
+            onChange={this.onUserReviewIDChange}
+            required
+          />
+          <input
+            placeholder="Review"
+            value={this.state.user_review}
+            onChange={this.onUserReviewChange}
+            required
+          />
+          <button type="submit">Update</button>
+        </form>
+      </div>
+    );
+  }
+}
+
+class PostReview extends React.Component {
+  state = {
+    film_film_id: "",
+    user_review: "",
+  };
+
+  onFilmIDChange = (e) => {
+    this.setState({
+      film_film_id: e.target.value,
+    });
+  };
+
+  onUserReviewChange = (e) => {
+    this.setState({
+      user_review: e.target.value,
+    });
+  };
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    const data = {
+      film_film_id: this.state.film_film_id,
+      user_review: this.state.user_review,
+    };
+    axios
+      .post(
+        `http://44.203.117.199:8080/Home/Add_Review?film_film_id=${this.state.film_film_id}&user_review=${this.state.user_review}`
+      )
+      .then((response) => console.log(response))
+      .catch((err) => console.log(err));
+    window.location.reload(false);
+  };
+  render() {
+    return (
+      <div>
+        <form onSubmit={this.handleSubmit}>
+          <input
+            placeholder="Film ID"
+            value={this.state.film_film_id}
+            onChange={this.onFilmIDChange}
+            required
+          />
+          <input
+            placeholder="Review"
+            value={this.state.user_review}
+            onChange={this.onUserReviewChange}
+            required
+          />
+          <button type="submit">Post</button>
+        </form>
+      </div>
+    );
+  }
+}
+
+class FilmRow extends React.Component {
+  render() {
+    const filmData = this.props.filmInfo;
+    return (
+      <div className="film-container">
+        <div className="box">
+          <img
+            src={
+              "https://www.pngitem.com/pimgs/m/301-3014574_popcorn-cinema-png-download-movie-popcorn-transparent-background.png"
+            }
+          />
+          <h3 className="filmTitle">Title: {filmData.title}</h3>
+          <p>
+            Film rating: {filmData.rating} | Release year:{" "}
+            {filmData.release_year}
+          </p>
+          <p>{filmData.description}</p>
+          <p>Film ID: {filmData.film_id}</p>
+          <p className="reviewDescription" id="reviewData">
+            {filmData.userReview.map((filmReview) => (
+              <div>
+                <ul>
+                  <li>Review: {filmReview.user_review}</li>
+                  <li>Review ID: {filmReview.user_review_id}</li>
+                </ul>
+              </div>
+            ))}
+          </p>
+          <PostReview />
+          <PutReview />
+          <DeleteReview />
+        </div>
+      </div>
+    );
   }
 }
 
 class MovieTable extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { movies: [] };
+    this.state = { films: [] };
   }
 
   componentDidMount() {
     axios
-      .get("https://localhost:8080/Home/Films")
-      .then((response) => this.setState({ movies: response.data }));
+      .get("http://44.203.117.199:8080/Home/Films")
+      .then((response) => this.setState({ films: response.data }));
   }
 
   render() {
-    const movie = this.state.movies;
-    const rows = [];
-    let lastGenre = null;
+    const film = this.state.films;
+    const filterText = this.props.filterText.toLowerCase();
 
-    this.state.movies.forEach((movie) => {
-      if (movie.genre !== lastGenre) {
-        rows.push(<MovieGenreRow genre={movie.genre} key={movie.genre} />);
+    const rows = [];
+
+    this.state.films.forEach((film) => {
+      if (film.title.toLowerCase().indexOf(filterText) === -1) {
+        return;
       }
-      rows.push(<MovieRow movies={movie} key={movie.genre} />);
+      rows.push(<FilmRow filmInfo={film} key={film.title} />);
     });
 
     return (
-      <table className="movieTable">
-        <thead>
-          <tr>
-            <th>Genre</th>
-            <th>Movie title</th>
-            <th>Release year</th>
-          </tr>
-        </thead>
-        <tbody>{rows} </tbody>
-      </table>
+      <div>
+        <div>{rows}</div>
+      </div>
     );
   }
 }
 
 class SearchBar extends React.Component {
   render() {
+    const filterText = this.props.filterText;
     return (
       <form className="searchBar">
-        <input type="text" placeholder="Search for movie.." />
-        <button>Search movie</button>
-        <label for="category">Category</label>
-        <select>
-          <option value="Horror">Horror</option>
-          <option value="Horror">Romance</option>
-          <option value="Horror">Action</option>
-        </select>
+        <input
+          type="text"
+          placeholder="Search for movie.."
+          value={filterText}
+          onChange={(e) => this.props.onFilterTextChange(e.target.value)}
+        />
       </form>
     );
   }
@@ -81,69 +247,36 @@ class NavigationPan extends React.Component {
 }
 
 class MovieMainPage extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      filterText: "",
+    };
+
+    this.handleFilterTextChange = this.handleFilterTextChange.bind(this);
+  }
+
+  handleFilterTextChange(FT) {
+    this.setState({
+      filterText: FT,
+    });
+  }
+
   render() {
     return (
       <div className="movieMain">
         <NavigationPan />
-        <SearchBar />
-        <MovieTable movies={this.props.movies} />
+        <SearchBar
+          filterText={this.state.filterText}
+          onFilterTextChange={this.handleFilterTextChange}
+        />
+        <MovieTable
+          films={this.props.films}
+          filterText={this.state.filterText}
+        />
       </div>
     );
   }
 }
 
-const Movies = [
-  {
-    title: "Pirates of the Carribean",
-    release_year: 2009,
-    genre: "Action",
-    released: true,
-  },
-  {
-    title: "Superman",
-    release_year: 2021,
-    genre: "Action",
-    released: true,
-  },
-  {
-    title: "Snakes on the plane",
-    release_year: 2001,
-    genre: "Drama",
-    released: true,
-  },
-  {
-    title: "Titanic",
-    release_year: 2009,
-    genre: "Drama",
-    released: false,
-  },
-  {
-    title: "Bend it like Beckham",
-    release_year: 2010,
-    genre: "Sports",
-    released: true,
-  },
-  {
-    title: "Save the last dance",
-    release_year: 2015,
-    genre: "Dance",
-    released: false,
-  },
-  {
-    title: "Stomp the yard",
-    release_year: 1999,
-    genre: "Dance",
-    released: false,
-  },
-  {
-    title: "Friday the 13th",
-    release_year: 2000,
-    genre: "Horror",
-    released: true,
-  },
-];
-
-ReactDOM.render(
-  <MovieMainPage movies={Movies} />,
-  document.getElementById("root")
-);
+ReactDOM.render(<MovieMainPage />, document.getElementById("root"));

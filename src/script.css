@@ -1,34 +1,55 @@
 body {
-  padding: 2rem;
+  padding: 1.5rem;
   background: whitesmoke;
 }
 
 .movieMain {
-  background: rgb(117, 127, 129);
-  padding: 2rem 1.5rem;
+  background: rgb(83, 41, 81);
+  padding: 1.5rem 1.5rem;
 }
 
-.movieTable {
-  border: 1px whitesmoke solid;
-  border-radius: 0.5rem;
-  width: 90%;
-  text-align: center;
-  padding: 1.5rem;
-  margin: 1.5rem 0 0 2.5rem;
+.film-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(27rem, 1fr));
+  gap: 1.5rem;
 }
+.film-container .box {
+  padding: 2rem 1.5rem;
+  border: 0.1rem solid antiquewhite;
+  border-radius: 0.5rem;
+  text-align: center;
+  margin-top: 1.5rem;
+}
+.film-container img {
+  width: 50%;
+  height: 15rem;
+  object-fit: cover;
+  margin: 0.2rem 0.2rem;
+}
+
+.actorDescription {
+  display: inline;
+}
+.film-container .box li {
+  list-style: none;
+}
+.film-container .box h3 {
+  color: whitesmoke;
+}
+.film-container .box p {
+  color: antiquewhite;
+}
+
 .searchBar {
   align-items: center;
   justify-content: space-between;
+  display: flex;
 }
 .searchBar input {
   width: 30%;
   padding: 8px 10px;
   box-sizing: border-box;
   margin: 8px 20px;
-}
-
-.searchBar button {
-  padding: 0.7rem;
   border-radius: 0.3rem;
   border: black;
 }
@@ -37,4 +58,5 @@ body {
   align-items: center;
   text-align: center;
   color: whitesmoke;
+  font-size: 4rem;
 }
