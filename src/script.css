@@ -1,6 +1,7 @@
 body {
   padding: 1.5rem;
   background: whitesmoke;
+  font-family: "Montserrat", sans-serif;
 }
 
 .movieMain {
@@ -59,4 +60,5 @@ body {
   text-align: center;
   color: whitesmoke;
   font-size: 4rem;
+  text-decoration: overline;
 }
