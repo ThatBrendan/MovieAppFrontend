@@ -159,14 +159,14 @@ class FilmRow extends React.Component {
     return (
       <div className="film-container">
         <div className="box">
-          <img
-            src={require("/Users/macintosh/Desktop/Web Dev/ReactApps/movie_reviewApp/src/images/popcorn.png")}
-          />
           {/* <img
+            src={require("/Users/macintosh/Desktop/Web Dev/ReactApps/movie_reviewApp/src/images/popcorn.png")}
+          /> */}
+          <img
             src={
               "https://www.pngitem.com/pimgs/m/301-3014574_popcorn-cinema-png-download-movie-popcorn-transparent-background.png"
             }
-          /> */}
+          />
           <h3 className="filmTitle">Title: {filmData.title}</h3>
           <p>
             Film rating: {filmData.rating} | Release year:{" "}
